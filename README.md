@@ -6,6 +6,10 @@ interesting emerging open source projects. According to
 the selection made by the community we want to donate
 our funds to the most promising teams and projects.
 
+[![Build Status](https://travis-ci.org/denistreshchev/CodeLonia.svg?branch=master)](https://travis-ci.org/denistreshchev/CodeLonia
+)
+
+
 ## How it works?
 
 Any open source _project_ can be added to the list.
@@ -42,10 +46,6 @@ docker-compose up app
 ```bash
 npm run build
 npm run app
-```
-
-```
-npm run 
 ```
 
 ## Check postgresql connection:
