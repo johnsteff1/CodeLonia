@@ -1,5 +1,5 @@
 assets:
-  config.yml: denistreshchev/home#assets/CodeLonia/prod.json
+  prod.json: denistreshchev/home#assets/CodeLonia/prod.json
   id_rsa: denistreshchev/home#assets/heroku-key
   id_rsa.pub: denistreshchev/home#assets/heroku-key.pub
 install: |-
