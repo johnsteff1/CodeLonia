@@ -21,51 +21,23 @@
 # SOFTWARE.
 
 require_relative 'xia'
-require_relative 'project'
 
-# Projects.
+# Badges.
 # Author:: Denis Treshchev (denistreshchev@gmail.com)
 # Copyright:: Copyright (c) 2020 Denis Treshchev
 # License:: MIT
-class Xia::Projects
-  def initialize(pgsql, author)
+class Xia::Badge
+  attr_reader :id
+
+  def initialize(pgsql, project, id)
     @pgsql = pgsql
-    @author = author
+    @project = project
+    @id = id
   end
 
-  def get(id)
-    Xia::Project.new(@pgsql, @author, id)
-  end
-
-  def submit(platform, coordinates)
-    raise Xia::Urror, 'Not enough karma to submit a project' unless @author.karma.positive?
-    id = @pgsql.exec(
-      'INSERT INTO project (platform, coordinates, author) VALUES ($1, $2, $3) RETURNING id',
-      [platform, coordinates, @author.id]
-    )[0]['id'].to_i
-    project = get(id)
-    project.badges.attach('newbie')
-    project
-  end
-
-  def recent(limit: 10)
-    q = [
-      'SELECT p.*, author.login,',
-      'ARRAY(SELECT text FROM badge WHERE project=p.id) as badges',
-      'FROM project AS p',
-      'JOIN author ON author.id=p.author',
-      'WHERE p.deleted IS NULL',
-      'ORDER BY p.created DESC',
-      'LIMIT $1'
-    ].join(' ')
-    @pgsql.exec(q, [limit]).map do |r|
-      {
-        id: r['id'].to_i,
-        coordinates: r['coordinates'],
-        author: r['login'],
-        badges: r['badges'][1..-2].split(','),
-        created: Time.parse(r['created'])
-      }
-    end
+  def detach
+    raise Xia::Urror, 'Not enough karma to detach a badge' unless @project.author.karma.positive?
+    raise Xia::Urror, 'Can\'t delete the last badge' if @project.badges.all.count < 2
+    @pgsql.exec('DELETE FROM badge WHERE id=$1', [@id])
   end
 end

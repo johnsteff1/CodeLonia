@@ -21,51 +21,33 @@
 # SOFTWARE.
 
 require_relative 'xia'
-require_relative 'project'
+require_relative 'badge'
 
-# Projects.
+# Badges.
 # Author:: Denis Treshchev (denistreshchev@gmail.com)
 # Copyright:: Copyright (c) 2020 Denis Treshchev
 # License:: MIT
-class Xia::Projects
-  def initialize(pgsql, author)
+class Xia::Badges
+  def initialize(pgsql, project)
     @pgsql = pgsql
-    @author = author
+    @project = project
   end
 
   def get(id)
-    Xia::Project.new(@pgsql, @author, id)
+    Xia::Badge.new(@pgsql, @project, id)
   end
 
-  def submit(platform, coordinates)
-    raise Xia::Urror, 'Not enough karma to submit a project' unless @author.karma.positive?
+  def all
+    @pgsql.exec('SELECT text FROM badge WHERE project=$1', [@project.id]).map { |r| r['text'] }
+  end
+
+  def attach(text)
+    raise Xia::Urror, 'Not enough karma to attach a badge' unless @project.author.karma.positive?
+    raise Xia::Urror, "The badge #{text.inspect} looks wrong" unless /^[a-z0-9]+$/.match?(text)
     id = @pgsql.exec(
-      'INSERT INTO project (platform, coordinates, author) VALUES ($1, $2, $3) RETURNING id',
-      [platform, coordinates, @author.id]
+      'INSERT INTO badge (project, text) VALUES ($1, $2) RETURNING id',
+      [@project.id, text]
     )[0]['id'].to_i
-    project = get(id)
-    project.badges.attach('newbie')
-    project
-  end
-
-  def recent(limit: 10)
-    q = [
-      'SELECT p.*, author.login,',
-      'ARRAY(SELECT text FROM badge WHERE project=p.id) as badges',
-      'FROM project AS p',
-      'JOIN author ON author.id=p.author',
-      'WHERE p.deleted IS NULL',
-      'ORDER BY p.created DESC',
-      'LIMIT $1'
-    ].join(' ')
-    @pgsql.exec(q, [limit]).map do |r|
-      {
-        id: r['id'].to_i,
-        coordinates: r['coordinates'],
-        author: r['login'],
-        badges: r['badges'][1..-2].split(','),
-        created: Time.parse(r['created'])
-      }
-    end
+    get(id)
   end
 end
