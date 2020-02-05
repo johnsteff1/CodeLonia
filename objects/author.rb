@@ -41,7 +41,7 @@ class Xia::Author
   end
 
   def vip?
-    login == 'denistreshchev'
+    login == 'denistreshchev' || login == '-test-'
   end
 
   def login
