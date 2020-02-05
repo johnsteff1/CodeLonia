@@ -20,25 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'loog'
-require_relative 'xia'
-require_relative 'author'
+require 'minitest/autorun'
+require_relative 'test__helper'
+require_relative '../objects/xia'
+require_relative '../objects/authors'
+require_relative '../objects/projects'
 
-# Authors.
-# Author:: Denis Treshchev (denistreshchev@gmail.com)
-# Copyright:: Copyright (c) 2020 Denis Treshchev
-# License:: MIT
-class Xia::Authors
-  def initialize(pgsql, log: Loog::NULL)
-    @pgsql = pgsql
-    @log = log
-  end
-
-  def named(login)
-    id = @pgsql.exec(
-      'INSERT INTO author (login) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id',
-      [login]
-    )[0]['id'].to_i
-    Xia::Author.new(@pgsql, id, log: @log)
+class Xia::KarmaTest < Minitest::Test
+  def test_list_withdrawals
+    author = Xia::Authors.new(t_pgsql).named('denistreshchev')
+    withdrawals = author.withdrawals
+    assert(!withdrawals.recent.nil?)
   end
 end

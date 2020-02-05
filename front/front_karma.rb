@@ -20,25 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'loog'
-require_relative 'xia'
-require_relative 'author'
+get '/karma' do
+  haml :karma, layout: :layout, locals: merged(
+    title: '/karma',
+    withdrawals: the_author.withdrawals.recent(limit: 25)
+  )
+end
 
-# Authors.
-# Author:: Denis Treshchev (denistreshchev@gmail.com)
-# Copyright:: Copyright (c) 2020 Denis Treshchev
-# License:: MIT
-class Xia::Authors
-  def initialize(pgsql, log: Loog::NULL)
-    @pgsql = pgsql
-    @log = log
-  end
-
-  def named(login)
-    id = @pgsql.exec(
-      'INSERT INTO author (login) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id',
-      [login]
-    )[0]['id'].to_i
-    Xia::Author.new(@pgsql, id, log: @log)
-  end
+post '/karma/withdraw' do
+  wallet = params[:wallet].strip
+  points = params[:points].to_i
+  id = the_author.withdrawals.pay(
+    wallet, points,
+    Zold::WTS.new(settings.config['zold']['token'], log: settings.log),
+    settings.config['zold']['keygap']
+  )
+  flash(iri.cut('/karma'), "We sent #{points} USD to your Zold wallet, payment ID is ##{id}")
 end
