@@ -25,6 +25,7 @@ require_relative 'xia'
 require_relative 'urror'
 require_relative 'projects'
 require_relative 'withdrawals'
+require_relative 'karma'
 
 # One author.
 # Author:: Denis Treshchev (denistreshchev@gmail.com)
@@ -43,38 +44,8 @@ class Xia::Author
     row['login']
   end
 
-  def legend
-    [
-      [
-        +5,
-        'SELECT COUNT(*) FROM project WHERE author=$1 AND deleted IS NULL',
-        'each project submitted'
-      ],
-      [
-        +10,
-        'SELECT COUNT(*) FROM review WHERE author=$1 AND deleted IS NULL',
-        'each review submitted'
-      ],
-      [
-        -25,
-        'SELECT COUNT(*) FROM project WHERE author=$1 AND deleted IS NOT NULL',
-        'each project deleted'
-      ],
-      [
-        -50,
-        'SELECT COUNT(*) FROM review WHERE author=$1 AND deleted IS NOT NULL',
-        'each review deleted'
-      ]
-    ]
-  end
-
   def karma
-    earned = legend.map do |score, q, _|
-      @pgsql.exec(q, [@id])[0]['count'].to_i * score
-    end.inject(&:+)
-    paid = @pgsql.exec('SELECT SUM(points) FROM withdrawal WHERE author=$1', [@id])[0]['sum'].to_i
-    earned += 1000 if login == '-test-'
-    @karma ||= earned - paid
+    Xia::Karma.new(@pgsql, self, log: @log)
   end
 
   def projects

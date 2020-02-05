@@ -20,26 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'loog'
-require_relative 'xia'
+require 'minitest/autorun'
+require_relative 'test__helper'
+require_relative '../objects/xia'
+require_relative '../objects/authors'
 
-# Badges.
-# Author:: Denis Treshchev (denistreshchev@gmail.com)
-# Copyright:: Copyright (c) 2020 Denis Treshchev
-# License:: MIT
-class Xia::Badge
-  attr_reader :id
-
-  def initialize(pgsql, project, id, log: Loog::NULL)
-    @pgsql = pgsql
-    @project = project
-    @id = id
-    @log = log
+class Xia::KarmaTest < Minitest::Test
+  def test_karma
+    authors = Xia::Authors.new(t_pgsql)
+    login = '-test-'
+    author = authors.named(login)
+    project = author.projects.submit('github', "denistreshchev/takes#{rand(999)}")
+    reviews = project.reviews
+    reviews.post('How are you?')
+    karma = authors.named(login).karma.points
+    assert(karma.positive?, "The karma is #{karma}")
   end
 
-  def detach
-    raise Xia::Urror, 'Not enough karma to detach a badge' unless @project.author.karma.points.positive?
-    raise Xia::Urror, 'Can\'t delete the last badge' if @project.badges.all.count < 2
-    @pgsql.exec('DELETE FROM badge WHERE id=$1', [@id])
+  def test_list_recent
+    authors = Xia::Authors.new(t_pgsql)
+    login = '-test-'
+    author = authors.named(login)
+    author.projects.submit('github', "denistreshchev/takes#{rand(999)}")
+    assert(!author.karma.recent.empty?)
   end
 end
