@@ -40,6 +40,10 @@ class Xia::Author
     @log = log
   end
 
+  def vip?
+    login == 'denistreshchev'
+  end
+
   def login
     row['login']
   end
