@@ -20,24 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'loog'
+require 'telepost'
 require_relative 'xia'
-require_relative 'author'
 
-# Authors.
+# Telegram gateway.
 # Author:: Denis Treshchev (denistreshchev@gmail.com)
 # Copyright:: Copyright (c) 2020 Denis Treshchev
 # License:: MIT
-class Xia::Authors
-  def initialize(pgsql, log: Loog::NULL, tgm: Xia::Tgm::Fake.new)
-    @pgsql = pgsql
-    @log = log
-    @tgm = tgm
+class Xia::Tgm
+  # Fake Tgm
+  class Fake
+    def post(*lines)
+      # Nothing to do
+    end
   end
 
-  def named(login)
-    @pgsql.exec('INSERT INTO author (login) VALUES ($1) ON CONFLICT DO NOTHING', [login])
-    id = @pgsql.exec('SELECT id FROM author WHERE login=$1', [login])[0]['id'].to_i
-    Xia::Author.new(@pgsql, id, log: @log, tgm: @tgm)
+  def initialize(token, channel)
+    @telepost = Telepost.new(token)
+    @channel = channel
+  end
+
+  def post(*lines)
+    @telepost.post(@channel, lines.is_a?(Array) ? lines.join(' ') : lines)
   end
 end
