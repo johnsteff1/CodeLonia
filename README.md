@@ -12,6 +12,13 @@ our funds to the most promising teams and projects.
 
 
 
+
+
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/denistreshchev/takes/CodeLonia/master/LICENSE.txt)
+
+
+
+
 We have the following bots at the moment:
 
   * `not-found`: Checks the presence of the repo on GitHub and posts a message if it's absent
