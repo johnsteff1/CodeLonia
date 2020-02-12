@@ -42,7 +42,7 @@ class Xia::Author
   end
 
   def bot?
-    ['denistreshchev', '-test-', 'cdxbot'].include?(login)
+    ['denistreshchev', '-test-', 'cdxbot', 'iakunin-CodeLonia-bot'].include?(login)
   end
 
   def vip?
