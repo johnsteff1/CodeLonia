@@ -30,7 +30,7 @@ class Xia::ProjectsTest < Minitest::Test
   def test_submits_project
     author = Xia::Authors.new(t_pgsql).named('denistreshchev')
     projects = author.projects
-    project = projects.submit('github', "denistreshchev/takes#{rand(999)}")
+    project = projects.submit('github', "yegor-1/takes_#{rand(999)}")
     assert(!project.id.nil?)
     assert(!projects.recent.empty?)
   end
