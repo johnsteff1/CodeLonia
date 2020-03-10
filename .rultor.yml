@@ -1,5 +1,5 @@
 docker:
-  image: denistreshchev/rultor-image:1.2
+  image: denistreshchev/rultor-image
 readers:
   - "urn:github:526301"
 assets:
