@@ -13,7 +13,7 @@ install: |-
   git config --global user.email "server@CodeLonia.org"
   git config --global user.name "CodeLonia.org"
   gem update bundler
-  sudo bundle install --no-color
+  bundle install --no-color
 release:
   sensitive:
     - config.yml
