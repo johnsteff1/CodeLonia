@@ -12,8 +12,8 @@ install: |-
   sudo apt-get -y install libpq-dev
   git config --global user.email "server@CodeLonia.org"
   git config --global user.name "CodeLonia.org"
-  gem update bundler
-  bundle install --no-color
+  sudo gem update bundler
+  sudo bundle install --no-color
 release:
   sensitive:
     - config.yml
