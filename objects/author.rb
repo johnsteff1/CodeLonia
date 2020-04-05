@@ -42,11 +42,13 @@ class Xia::Author
   end
 
   def bot?
-    ['denistreshchev', '-test-', 'cdxbot', 'iakunin-CodeLonia-bot', 'CodeLonia-hunter'].include?(login)
+    return true if login.start_with?('-')
+    ['denistreshchev', 'cdxbot', 'iakunin-CodeLonia-bot', 'CodeLonia-hunter'].include?(login)
   end
 
   def vip?
-    ['denistreshchev', '-test-'].include?(login)
+    return true if login.start_with?('-')
+    ['denistreshchev'].include?(login)
   end
 
   def login
