@@ -20,33 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative 'xia'
-require_relative 'author'
+require 'minitest/autorun'
+require_relative 'test__helper'
+require_relative '../objects/xia'
+require_relative '../objects/bots'
+require_relative '../objects/authors'
 
-# Bots.
-# Author:: Denis Treshchev (denistreshchev@gmail.com)
-# Copyright:: Copyright (c) 2020 Denis Treshchev
-# License:: MIT
-class Xia::Bots
-  # List of all of them
-  ALL = ['denistreshchev', 'cdxbot', 'iakunin-CodeLonia-bot', 'CodeLonia-hunter'].freeze
-
-  def initialize(pgsql = nil, log: Loog::NULL, telepost: Telepost::Fake.new)
-    @pgsql = pgsql
-    @log = log
-    @telepost = telepost
-  end
-
-  def is?(author)
-    login = author.is_a?(Xia::Author) ? author.login : author
-    return true if login.start_with?('-')
-    ALL.include?(login)
-  end
-
-  def authors
-    q = "SELECT id FROM author WHERE #{(1..ALL.count).map { |i| "login=$#{i}" }.join(' OR ')}"
-    @pgsql.exec(q, ALL).map do |r|
-      Xia::Author.new(@pgsql, r['id'].to_i, log: @log, telepost: @telepost)
-    end
+class Xia::BotsTest < Minitest::Test
+  def test_fetches_all_bots
+    authors = Xia::Authors.new(t_pgsql)
+    authors.named('denistreshchev')
+    bots = Xia::Bots.new(t_pgsql)
+    assert(!bots.authors.empty?)
+    bot = bots.authors.first
+    assert(!bot.login.nil?)
   end
 end
