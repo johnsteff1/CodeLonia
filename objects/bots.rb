@@ -29,7 +29,7 @@ require_relative 'author'
 # License:: MIT
 class Xia::Bots
   # List of all of them
-  ALL = ['denistreshchev', 'cdxbot', 'iakunin-CodeLonia-bot', 'CodeLonia-hunter'].freeze
+  ALL = ['cdxbot', 'iakunin-CodeLonia-bot', 'CodeLonia-hunter'].freeze
 
   def initialize(pgsql = nil, log: Loog::NULL, telepost: Telepost::Fake.new)
     @pgsql = pgsql
