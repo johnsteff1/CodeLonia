@@ -21,10 +21,12 @@ our funds to the most promising teams and projects.
 
 
 
-  * [iakunin/CodeLonia-bot](https://github.com/iakunin/CodeLonia-bot)
+
+    
 
 
-  * [/CodeLonia-hunter](https://github.com/iakunin/CodeLonia-hunter)
+  * [CodeLonia-hunter](https://github.com/iakunin/CodeLonia-hunter)
+
 
 
 
