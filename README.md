@@ -25,7 +25,7 @@ our funds to the most promising teams and projects.
     
 
 
-  * [CodeLonia-hunter](https://github.com/iakunin/CodeLonia-hunter)
+
 
 
 
