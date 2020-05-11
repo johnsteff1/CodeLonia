@@ -27,7 +27,6 @@ require_relative 'badges'
 require_relative 'meta'
 require_relative 'rank'
 require_relative 'bots'
-require_relative 'veil'
 
 # Project.
 # Author:: Denis Treshchev (denistreshchev@gmail.com)
