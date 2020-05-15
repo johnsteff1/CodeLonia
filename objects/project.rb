@@ -105,9 +105,9 @@ class Xia::Project
       [@author.id, @id]
     )
     @telepost.spam(
-      "The project no.#{@id} [#{coordinates}](https://github.com/#{coordinates}) has been deleted",
-      "by [@#{@author.login}](https://github.com/#{@author.login})",
-      "(it was earlier submitted by [@#{submitter.login}](https://github.com/#{submitter.login}))"
+      "The project no.#{@id} [#{coordinates}](https://www.CodeLonia.org/p/#{@id}) has been deleted",
+      "by [@#{@author.login}](https://www.CodeLonia.org/a/#{@author.login})",
+      "(it was earlier submitted by [@#{submitter.login}](https://www.CodeLonia.org/a/#{submitter.login}))"
     )
   end
 

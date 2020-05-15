@@ -76,7 +76,7 @@ class Xia::Projects
     unless Xia::Bots.new.is?(@author)
       @telepost.spam(
         "😍 New #{platform} project [#{coordinates}](https://www.CodeLonia.org/p/#{id}) has been submitted",
-        "by [@#{@author.login}](https://github.com/#{@author.login})"
+        "by [@#{@author.login}](https://www.CodeLonia.org/a/#{@author.login})"
       )
     end
     project
