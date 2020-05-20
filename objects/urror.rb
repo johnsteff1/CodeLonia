@@ -27,3 +27,9 @@ require_relative 'xia'
 # Copyright:: Copyright (c) 2020 Denis Treshchev
 # License:: MIT
 class Xia::Urror < StandardError; end
+
+# Something is not found.
+# Author:: Denis Treshchev (denistreshchev@gmail.com)
+# Copyright:: Copyright (c) 2020 Denis Treshchev
+# License:: MIT
+class Xia::NotFound < StandardError; end
